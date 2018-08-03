@@ -1,7 +1,11 @@
 package com.practicalunittesting.chp03;
 
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
+import static junitparams.JUnitParamsRunner.$;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -10,19 +14,34 @@ import static org.junit.Assert.assertEquals;
  *
  * @author Tomek Kaczanowski
  */
+@RunWith(JUnitParamsRunner.class)
 public class FahrenheitCelciusConverterTest {
 
-	@Test
-	public void shouldConvertCelciusToFahrenheit() {
-		assertEquals(32, FahrenheitCelciusConverter.toFahrenheit(0));
-		assertEquals(98, FahrenheitCelciusConverter.toFahrenheit(37));
-		assertEquals(212, FahrenheitCelciusConverter.toFahrenheit(100));
+	private Object[] getCelciusDegrees() {
+		return $(
+				$(32, 0),
+				$(98, 37),
+				$(212, 100)
+		);
+	}
+
+	private Object[] getFahrenheitDegrees() {
+		return $(
+				$(0, 32),
+				$(37, 100),
+				$(100, 212)
+		);
 	}
 
 	@Test
-	public void shouldConvertFahrenheitToCelcius() {
-		assertEquals(0, FahrenheitCelciusConverter.toCelcius(32));
-		assertEquals(37, FahrenheitCelciusConverter.toCelcius(100));
-		assertEquals(100, FahrenheitCelciusConverter.toCelcius(212));
+	@Parameters(method = "getCelciusDegrees")
+	public void shouldConvertCelciusToFahrenheit(int fahrenheit, int celcius) {
+		assertEquals(fahrenheit, FahrenheitCelciusConverter.toFahrenheit(celcius));
+	}
+
+	@Test
+	@Parameters(method = "getFahrenheitDegrees")
+	public void shouldConvertFahrenheitToCelcius(int celcius, int fahrenheit) {
+		assertEquals(celcius, FahrenheitCelciusConverter.toCelcius(fahrenheit));
 	}
 }

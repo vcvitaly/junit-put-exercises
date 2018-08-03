@@ -12,6 +12,8 @@ import java.util.List;
 public class StringUtils {
 
 	public static String reverse(String s) {
+		if (s == null)
+			return null;
 		List<String> tempArray = new ArrayList<String>(s.length());
 		for (int i = 0; i < s.length(); i++) {
 			tempArray.add(s.substring(i, i + 1));
