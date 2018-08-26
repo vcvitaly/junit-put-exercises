@@ -1,9 +1,13 @@
 package com.practicalunittesting.chp04;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static com.practicalunittesting.chp04.PasswordValidator.PasswordValidationException.Messages.*;
+import static org.junit.Assert.assertEquals;
+
+/*
+JUnit5 provides assertThrows
+*/
 
 public class PasswordValidatorTest {
 
@@ -11,27 +15,57 @@ public class PasswordValidatorTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void shouldFailIfLessThan8Chars() {
-        passwordValidator.validate("1234567");
+        try {
+            passwordValidator.validate("1234567");
+        } catch (IllegalArgumentException e) {
+            assertEquals(SHOULD_BE_AT_LEAST_8_CHAR.toString(), e.getMessage());
+            throw e;
+        }
     }
 
     @Test
-    public void shouldPassIfAtLeast8Chars() {
-        passwordValidator.validate("12345678");
+    public void shouldPassIfAtLeast8CharsIncludingDigitsLettersSymbols() {
+        passwordValidator.validate("1aB@#$%^&*()");
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldContainLowerCaseLetters() {
-        passwordValidator.validate("123ABCDEFG");
+    public void shouldFailIfNoLowercaseLetters() {
+        try {
+            passwordValidator.validate("123ABCDEFG@");
+        } catch (IllegalArgumentException e) {
+            assertEquals(SHOULD_CONTAIN_LOWERCASE_LETTERS.toString(), e.getMessage());
+            throw e;
+        }
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldContainUpperCaseLetters() {
-        passwordValidator.validate("123abcdefg");
+    public void shouldFailIfNoUppercaseLetters() {
+        try {
+            passwordValidator.validate("123abcdefg@");
+        } catch (IllegalArgumentException e) {
+            assertEquals(SHOULD_CONTAIN_UPPERCASE_LETTERS.toString(), e.getMessage());
+            throw e;
+        }
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void shouldContainDigits() {
-        passwordValidator.validate("ABCDefghij");
+    public void shouldFailIfNoDigits() {
+        try {
+            passwordValidator.validate("ABCDefghij@");
+        } catch (IllegalArgumentException e) {
+            assertEquals(SHOULD_CONTAIN_DIGITS.toString(), e.getMessage());
+            throw e;
+        }
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldFailIfNoSymbols() {
+        try {
+            passwordValidator.validate("123456aB");
+        } catch (IllegalArgumentException e) {
+            assertEquals(SHOULD_CONTAIN_SYMBOLS.toString(), e.getMessage());
+            throw e;
+        }
     }
 
 }
